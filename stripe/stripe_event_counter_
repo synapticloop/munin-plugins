@@ -11,46 +11,19 @@
 # fired within the current day.  At the time of writing the following events
 # are supported (see: https://stripe.com/docs/api#event_types)
 #
-#   - account.updated
-#   - account.application.deauthorized
-#   - balance.available
-#   - charge.succeeded
-#   - charge.failed
-#   - charge.refunded
-#   - charge.captured
-#   - charge.dispute.created
-#   - charge.dispute.updated
-#   - charge.dispute.closed
-#   - customer.created
-#   - customer.updated
-#   - customer.deleted
-#   - customer.card.created
-#   - customer.card.updated
-#   - customer.card.deleted
-#   - customer.subscription.created
-#   - customer.subscription.updated
-#   - customer.subscription.deleted
-#   - customer.subscription.trial_will_end
-#   - customer.discount.created
-#   - customer.discount.updated
-#   - customer.discount.deleted
-#   - invoice.created
-#   - invoice.updated
-#   - invoice.payment_succeeded
-#   - invoice.payment_failed
-#   - invoiceitem.created
-#   - invoiceitem.updated
-#   - invoiceitem.deleted
-#   - plan.created
-#   - plan.updated
-#   - plan.deleted
-#   - coupon.created
-#   - coupon.deleted
-#   - transfer.created
-#   - transfer.updated
-#   - transfer.paid
-#   - transfer.failed
-#   - ping
+# account.updated, account.application.deauthorized, balance.available, 
+# charge.succeeded, charge.failed, charge.refunded, charge.captured, 
+# charge.dispute.created, charge.dispute.updated, charge.dispute.closed, 
+# customer.created, customer.updated, customer.deleted, customer.card.created, 
+# customer.card.updated, customer.card.deleted, customer.subscription.created, 
+# customer.subscription.updated, customer.subscription.deleted, 
+# customer.subscription.trial_will_end, customer.discount.created, 
+# customer.discount.updated, customer.discount.deleted, invoice.created, 
+# invoice.updated, invoice.payment_succeeded, invoice.payment_failed, 
+# invoiceitem.created, invoiceitem.updated, invoiceitem.deleted, plan.created, 
+# plan.updated, plan.deleted, coupon.created, coupon.deleted, transfer.created, 
+# transfer.updated, transfer.paid, transfer.failed, ping, 
+# 
 # APPLICABLE SYSTEMS
 #
 # Any
@@ -62,15 +35,23 @@
 
 import sys, os, string, urllib2, stripe
 from urllib2 import HTTPError
+from datetime import datetime
+import time
 import socket
 
-THIS_SCRIPT_NAME = "stripe_event_counter_"
+THIS_SCRIPT_NAME ="stripe_event_counter_"
 stripe.api_key = os.environ["STRIPE_API_KEY"]
 
 def get_stats(event_type):
+	# get the time for todays 00:00
+	now = datetime.now()
+	previous_midnight = datetime(now.year, now.month, now.day)
+	previous_midnight_timestamp = int(time.mktime(previous_midnight.timetuple()))
+
+	# make the call
 	try:
-		jsonPayload = stripe.Event.all(count=0, type=event_type)
-		print("EVENT_COUNT.value %i" % (jsonPayload["count"]))
+		jsonPayload = stripe.Event.all(count=0, type=event_type, created={"gt":previous_midnight_timestamp})
+		print("EVENT_COUNT.value %i" % (len(jsonPayload["data"])))
 	except HTTPError, e:
 		sys.exit()
 
@@ -96,3 +77,4 @@ if __name__ == "__main__":
 			sys.exit()
 
 	get_stats(event_type)
+
