@@ -17,21 +17,21 @@ Installation
 
 ## Python
 
-> sudo apt-get install python
+>     sudo apt-get install python
 
 ## pip
 
-> sudo apt-get install python-pip
+>     sudo apt-get install python-pip
 
 ## Stripe Python API
-> pip install --index-url https://code.stripe.com --upgrade stripe
+>     pip install --index-url https://code.stripe.com --upgrade stripe
 
 Munin Setup
 ===========
 
 copy the file conf/stripe to /etc/munin/plugin-conf.d/stripe i.e.:
 
-> cp conf/stripe /etc/munin/plugin-conf.d/
+>     cp conf/stripe /etc/munin/plugin-conf.d/
 
 
 ## stripe_customer_count
@@ -40,12 +40,12 @@ Provide a running total of the number of customers that are in your stripe accou
 
 ### Installation
 
-> sudo cp stripe_customer_count /usr/share/munin/plugins/stripe_customer_count
+>     sudo cp stripe_customer_count /usr/share/munin/plugins/stripe_customer_count
 >
-> sudo cd /etc/munin/plugins
+>     sudo cd /etc/munin/plugins
 >
-> sudo ln -s /usr/share/munin/plugins/stripe_customer_count stripe_customer_count
+>     sudo ln -s /usr/share/munin/plugins/stripe_customer_count stripe_customer_count
 >
-> sudo /etc/init.d/munin-node restart
+>     sudo /etc/init.d/munin-node restart
 
 
