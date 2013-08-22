@@ -15,9 +15,17 @@
 #
 # CONFIGURATION
 #
-# This script is used to generate data for several graphs. To generate data for 
-# one specific hudson instance, you need to create a symbolic link with a name 
-# like hudson_<NAME> to this script.
+# This script is used to generate data for several graphs of number of visits
+# per site for the piwik installation.
+# 
+# You must know the site number of your piwik installation and create a
+# symbolic link to the site number that you wish to track
+#
+# For example to track site 1
+#
+#   cd /etc/munin/plugins
+#   ln -s /usr/share/munin/plugins/piwik-num-visits_ piwik-num-visits_1
+#   /etc/init.d/munin-node restart
 #
 # connection parameters - use this in your plugin configuration file.
 #

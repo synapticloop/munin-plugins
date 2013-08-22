@@ -36,3 +36,21 @@ Count the number of wordpress blogs running in the wild
 Count the number of wordpress plugin downloads
 
 ### Installation
+
+This script is used to generate data for several graphs. To generate data for
+one specific wordpress plugin instance, you need to create a symbolic link
+with a name like wordpress_plugin_download_counter_<NAME> to this script.
+For example: to track the WP Super Cache number of downloads
+
+> The URL for it is 
+>     http://wordpress.org/plugins/__wp-super-cache__/
+
+So you would use the following
+
+>     wp-super-cache
+
+as the name, so to install
+
+>     cd /etc/munin/plugins
+>     ln -s /usr/share/munin/plugins/wordpress_plugin_download_counter_ wordpress_plugin_download_counter_wp-super-cache
+>     /etc/init.d/munin-node restart

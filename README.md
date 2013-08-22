@@ -1,4 +1,4 @@
 munin-plugins
 =============
 
-Munin Plugins for various Things
+Munin plugins for various things which may or may not be handy to you

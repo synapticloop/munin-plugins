@@ -1,1 +1,3 @@
 [stripe_*]
+# put your stripe api key below
+env.STRIPE_API_KEY YourAPIKeyGoesHere
