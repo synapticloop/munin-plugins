@@ -1,0 +1,74 @@
+#!/usr/bin/python
+
+# encoding utf8
+# head1 NAME
+#
+# wordpress_plugin_ - Munin plugin to display wordpress download stats for plugins.
+#
+# CONFIGURATION
+#
+# This script is used to generate data for the number of downloads of plugins
+#
+# APPLICABLE SYSTEMS
+#
+# Any system that can connect to wordpress plugins
+#
+# CONFIGURATION
+#
+# This script is used to generate data for several graphs. To generate data for
+# one specific wordpress plugin instance, you need to create a symbolic link
+# with a name like wordpress_plugin_<NAME> to this script.
+#
+# connection parameters - use this in your plugin configuration file.
+#
+
+import sys, os, string, urllib2
+from urllib2 import HTTPError
+import socket
+
+THIS_SCRIPT_NAME = "wordpress_plugin_download_counter_"
+THIS_TO_BE_FOUND = "UserDownloads"
+
+def get_stats(stat_url):
+	contents=""
+	try:
+		socket.setdefaulttimeout(10)
+		response = urllib2.urlopen(stat_url)
+		contents = response.read()
+	except HTTPError, e:
+		sys.exit()
+
+	start_index_of_download = string.find(contents, THIS_TO_BE_FOUND) + len(THIS_TO_BE_FOUND) + 1
+	end_index_of_download = string.find(contents, "\"", start_index_of_download)
+
+	print("DOWNLOADS.value " + (contents[start_index_of_download: end_index_of_download]))
+
+if __name__ == "__main__":
+	# figure out which one we are doing
+	full_caller_name = sys.argv[0]
+	index_of_wordpress = full_caller_name.find(THIS_SCRIPT_NAME)
+	caller = sys.argv[0][len(THIS_SCRIPT_NAME) + index_of_wordpress:]
+	caller_nice_name = caller.replace("_", " ")
+	caller_nice_name = caller_nice_name.replace("-", " ")
+
+	# are we doing config/autoconfig?
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Plugin Downloads for '" + caller_nice_name.title() + "'"
+			print "graph_vlabel Number Of Downloads"
+			print "graph_category wordpress"
+			print "graph_order DOWNLOADS"
+
+			# in green
+			print "DOWNLOADS.label Downloads"
+			print "DOWNLOADS.colour 00cc00"
+			print "DOWNLOADS.draw AREA"
+
+			print "graph_args --base 1000 -l 0 "
+			print "graph_scale no "
+			sys.exit()
+
+	# now that we know the caller, get the environment
+	stat_url = "http://wordpress.org/extend/plugins/" + caller_nice_name + "/"
+	if(None != stat_url):
+		get_stats(stat_url)

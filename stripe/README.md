@@ -26,8 +26,8 @@ Installation
 ## Stripe Python API
 >     pip install --index-url https://code.stripe.com --upgrade stripe
 
-Munin Setup
-===========
+Munin Configuration
+===================
 
 copy the file conf/stripe to /etc/munin/plugin-conf.d/stripe i.e.:
 
