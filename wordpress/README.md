@@ -1,5 +1,9 @@
-stripe
-======
+Wordpress
+=========
+
+Handy munin graph creators for various [wordpress](http://www.wordpress.com) 
+related downloads and installations
+
 
 Requirements
 ============
