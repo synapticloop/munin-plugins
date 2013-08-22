@@ -14,7 +14,7 @@
 #
 # Any
 #
-# CONFIGURATION
+# you will need to have a env.STRIPE_API_KEY
 #
 # None
 #

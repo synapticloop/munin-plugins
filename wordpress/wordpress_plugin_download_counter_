@@ -24,6 +24,7 @@
 #   The URL for it is http://wordpress.org/plugins/wp-super-cache/
 #   So you would use the following --------------> ^^^^^^^^^^^^^^
 #   wp-super-cache as the name
+#
 # i.e. 
 #
 #   cd /etc/munin/plugins

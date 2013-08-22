@@ -1,0 +1,98 @@
+#!/usr/bin/python
+
+# encoding utf8
+# head1 NAME
+#
+# stripe_account_balance
+#
+# CONFIGURATION
+#
+# This script is used to generate the daily totals for events that stripe has
+# fired within the current day.  At the time of writing the following events
+# are supported (see: https://stripe.com/docs/api#event_types)
+#
+#   - account.updated
+#   - account.application.deauthorized
+#   - balance.available
+#   - charge.succeeded
+#   - charge.failed
+#   - charge.refunded
+#   - charge.captured
+#   - charge.dispute.created
+#   - charge.dispute.updated
+#   - charge.dispute.closed
+#   - customer.created
+#   - customer.updated
+#   - customer.deleted
+#   - customer.card.created
+#   - customer.card.updated
+#   - customer.card.deleted
+#   - customer.subscription.created
+#   - customer.subscription.updated
+#   - customer.subscription.deleted
+#   - customer.subscription.trial_will_end
+#   - customer.discount.created
+#   - customer.discount.updated
+#   - customer.discount.deleted
+#   - invoice.created
+#   - invoice.updated
+#   - invoice.payment_succeeded
+#   - invoice.payment_failed
+#   - invoiceitem.created
+#   - invoiceitem.updated
+#   - invoiceitem.deleted
+#   - plan.created
+#   - plan.updated
+#   - plan.deleted
+#   - coupon.created
+#   - coupon.deleted
+#   - transfer.created
+#   - transfer.updated
+#   - transfer.paid
+#   - transfer.failed
+#   - ping
+# APPLICABLE SYSTEMS
+#
+# Any
+#
+# CONFIGURATION
+#
+# you will need to have a env.STRIPE_API_KEY
+#
+
+import sys, os, string, urllib2, stripe
+from urllib2 import HTTPError
+import socket
+
+THIS_SCRIPT_NAME = "stripe_event_counter_"
+stripe.api_key = os.environ["STRIPE_API_KEY"]
+
+def get_stats(event_type):
+	try:
+		jsonPayload = stripe.Event.all(count=0, type=event_type)
+		print("EVENT_COUNT.value %i" % (jsonPayload["count"]))
+	except HTTPError, e:
+		sys.exit()
+
+
+if __name__ == "__main__":
+	full_caller_name = sys.argv[0]
+	index_of_script = full_caller_name.find(THIS_SCRIPT_NAME)
+	event_type = sys.argv[0][len(THIS_SCRIPT_NAME) + index_of_script:]
+
+	# are we doing config/autoconfig?
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Event Count for '" + event_type + "'."
+			print "graph_vlabel Number of Events"
+			print "graph_category stripe"
+
+			# in green
+			print "EVENT_COUNT.label " + event_type + ""
+			print "EVENT_COUNT.colour 00cc00"
+			print "EVENT_COUNT.draw AREA"
+
+			print "graph_args --base 1000 "
+			sys.exit()
+
+	get_stats(event_type)

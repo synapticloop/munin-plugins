@@ -3,7 +3,7 @@
 # encoding utf8
 # head1 NAME
 #
-# stripe_customers
+# stripe_account_balance
 #
 # CONFIGURATION
 #
@@ -16,7 +16,7 @@
 #
 # CONFIGURATION
 #
-# None
+# you will need to have a env.STRIPE_API_KEY
 #
 
 import sys, os, string, urllib2, stripe
