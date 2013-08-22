@@ -1,0 +1,101 @@
+#!/usr/bin/python
+
+# encoding utf8
+# head1 NAME
+#
+# piwik-num-visits_ - Munin plugin to display piwik statistics for a site
+#
+# CONFIGURATION
+#
+# This script is used to generate data for piwik visitors
+#
+# APPLICABLE SYSTEMS
+#
+# Any system that can connect to piwik
+#
+# CONFIGURATION
+#
+# This script is used to generate data for several graphs. To generate data for 
+# one specific hudson instance, you need to create a symbolic link with a name 
+# like hudson_<NAME> to this script.
+#
+# connection parameters - use this in your plugin configuration file.
+#
+# [piwik_*]
+# env.piwik.url the url to hit the piwik API on
+# env.piwik.token_auth the authorisation token for the piwik installation
+#
+
+import sys, os, string, urllib2, json
+from urllib2 import HTTPError
+import socket
+
+THIS_SCRIPT_NAME = "piwik-num-visits_"
+THIS_PIWIK_URL = ""
+THIS_TOKEN_AUTH = ""
+THIS_ID_SITE = ""
+
+def get_json_data(method, json_key):
+	piwik_api_url = THIS_PIWIK_URL + "?module=API&idSite=" + THIS_ID_SITE + "&method=" + method + "&format=json&token_auth=" + THIS_TOKEN_AUTH
+
+	contents=""
+	try:
+		socket.setdefaulttimeout(10)
+		response = urllib2.urlopen(piwik_api_url)
+		contents = response.read()
+	except HTTPError, e:
+		sys.exit()
+
+	jsonContents = json.loads(contents)
+
+	if(method.rfind("period") != -1):
+		return(jsonContents[json_key])
+	else:
+		return(jsonContents[0][json_key])
+
+def get_site_name():
+	return(get_json_data("SitesManager.getSiteFromId", "name"))
+
+def get_num_visits():
+	return(get_json_data("API.get&period=day&date=today", "nb_visits"))
+
+if __name__ == "__main__":
+	# figure out which one we are doing
+	full_caller_name = sys.argv[0]
+	index_of_script = full_caller_name.find(THIS_SCRIPT_NAME)
+
+	piwik_url = os.environ.get("piwik.url")
+	token_auth = os.environ.get("piwik.token_auth")
+
+	if(None == piwik_url or None == token_auth):
+		print("FATAL: need url and auth token, got:")
+		print(piwik_url)
+		print(  "and")
+		print(token_auth)
+		sys.exit()
+	else:
+		THIS_PIWIK_URL = piwik_url
+		THIS_TOKEN_AUTH = token_auth
+
+	THIS_ID_SITE = sys.argv[0][len(THIS_SCRIPT_NAME) + index_of_script:]
+
+	# are we doing config/autoconfig?
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Daily Visits for: " + get_site_name()
+			print "graph_vlabel Number Of Visits"
+			print "graph_category piwik"
+			print "graph_order NUM_HITS"
+
+			# in green
+			print "NUM_HITS.label Number of Hits"
+			print "NUM_HITS.colour 00cc00"
+			print "NUM_HITS.draw AREA"
+
+			print "graph_args --base 1000 -l 0 "
+			sys.exit()
+
+	# now that we know the caller, get the environment
+	#stat_url = os.environ.get("url." + caller)
+
+	print("NUM_HITS.value %i" % (get_num_visits()))

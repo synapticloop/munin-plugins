@@ -1,0 +1,3 @@
+[piwik_*]
+env.piwik.url https://your.piwik.server.com
+env.piwik.token_auth YourAuthKeyGoesHere

@@ -1,7 +1,7 @@
 Wordpress
 =========
 
-Handy munin graph creators for various [wordpress](http://www.wordpress.com) 
+Handy munin graph creators for various [wordpress](http://www.wordpress.org) 
 related downloads and installations
 
 
