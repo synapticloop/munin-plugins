@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+# encoding utf8
+# head1 NAME
+#
+# stripe_customers
+#
+# CONFIGURATION
+#
+# This script is used to generate data for the number of customers that are
+# attached to stripe
+#
+# APPLICABLE SYSTEMS
+#
+# Any
+#
+# CONFIGURATION
+#
+# None
+#
+
+import sys, os, string, urllib2, stripe
+from urllib2 import HTTPError
+import socket
+
+stripe.api_key = os.environ["STRIPE_API_KEY"]
+
+def get_stats():
+	try:
+		jsonPayload = stripe.Balance.retrieve()
+		print("BALANCE_PENDING.value %i" % (jsonPayload["pending"][0]["amount"]))
+		print("BALANCE_AVAILABLE.value %i" % (jsonPayload["available"][0]["amount"]))
+	except HTTPError, e:
+		sys.exit()
+
+
+if __name__ == "__main__":
+	# are we doing config/autoconfig?
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Account Balance"
+			print "graph_vlabel Amount"
+			print "graph_category stripe"
+
+			# in green
+			print "BALANCE_PENDING.label Pending"
+			print "BALANCE_PENDING.colour 00cc00"
+			print "BALANCE_PENDING.draw LINE3"
+
+			print "BALANCE_AVAILABLE.label Available"
+			print "BALANCE_AVAILABLE.colour cc0000"
+			print "BALANCE_AVAILABLE.draw LINE3"
+
+			print "graph_args --base 1000 "
+			sys.exit()
+
+	get_stats()

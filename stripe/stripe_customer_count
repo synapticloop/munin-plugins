@@ -1,0 +1,52 @@
+#!/usr/bin/python
+
+# encoding utf8
+# head1 NAME
+#
+# stripe_customers
+#
+# CONFIGURATION
+#
+# This script is used to generate data for the number of customers that are
+# attached to stripe
+#
+# APPLICABLE SYSTEMS
+#
+# Any
+#
+# CONFIGURATION
+#
+# None
+#
+
+import sys, os, string, urllib2, stripe
+from urllib2 import HTTPError
+import socket
+
+stripe.api_key = os.environ["STRIPE_API_KEY"]
+
+def get_stats():
+	try:
+		jsonPayload = stripe.Customer.all(count=0)
+		print("CUSTOMERS.value %i" % (jsonPayload["count"]))
+	except HTTPError, e:
+		sys.exit()
+
+
+if __name__ == "__main__":
+	# are we doing config/autoconfig?
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Number of Stripe Customers"
+			print "graph_vlabel Number Of Customers"
+			print "graph_category stripe"
+
+			# in green
+			print "CUSTOMERS.label Customers"
+			print "CUSTOMERS.colour 00cc00"
+			print "CUSTOMERS.draw AREA"
+
+			print "graph_args --base 1000 "
+			sys.exit()
+
+	get_stats()
