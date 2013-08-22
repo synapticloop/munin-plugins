@@ -9,7 +9,7 @@ Requirements
 
  - Munin (of course)
  - Python (version 2.6 or greater for JSON parser)
- - pip python installer
+ - pip Installer
  - Stripe Python API
 
 Installation
@@ -19,7 +19,7 @@ Installation
 
 >     sudo apt-get install python
 
-## pip
+## pip Installer
 
 >     sudo apt-get install python-pip
 
@@ -48,4 +48,17 @@ Provide a running total of the number of customers that are in your stripe accou
 >
 >     sudo /etc/init.d/munin-node restart
 
+## stripe_account_balance
+
+Provide a running of the balance of your stripe account
+
+### Installation
+
+>     sudo cp stripe_account_balance /usr/share/munin/plugins/stripe_account_balance
+>
+>     sudo cd /etc/munin/plugins
+>
+>     sudo ln -s /usr/share/munin/plugins/stripe_account_balance stripe_account_balance
+>
+>     sudo /etc/init.d/munin-node restart
 
