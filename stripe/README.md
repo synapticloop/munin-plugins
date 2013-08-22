@@ -41,8 +41,7 @@ Provide a running total of the number of customers that are in your stripe accou
 ### Installation
 
 >     sudo cp stripe_customer_count /usr/share/munin/plugins/stripe_customer_count
->     sudo cd /etc/munin/plugins
->     sudo ln -s /usr/share/munin/plugins/stripe_customer_count stripe_customer_count
+>     sudo ln -s /usr/share/munin/plugins/stripe_customer_count /etc/munin/plugins/stripe_customer_count
 >     sudo /etc/init.d/munin-node restart
 
 ## stripe_account_balance
@@ -52,8 +51,7 @@ Provide a running of the balance of your stripe account
 ### Installation
 
 >     sudo cp stripe_account_balance /usr/share/munin/plugins/stripe_account_balance
->     sudo cd /etc/munin/plugins
->     sudo ln -s /usr/share/munin/plugins/stripe_account_balance stripe_account_balance
+>     sudo ln -s /usr/share/munin/plugins/stripe_account_balance /etc/munin/plugins/stripe_account_balance
 >     sudo /etc/init.d/munin-node restart
 
 ## stripe_event_counter_
@@ -106,9 +104,8 @@ of writing, the following events are supported see [Stripe documentation for a c
 
 ### Installation
 
-To install a munin statistic to count the number of customer.created (see third command below)
+To install a munin statistic to count the number of customer.created (see second command below)
 
 >     sudo cp stripe_event_counter_ /usr/share/munin/plugins/stripe_event_counter_
->     sudo cd /etc/munin/plugins
->     sudo ln -s /usr/share/munin/plugins/stripe_event_counter_ stripe_event_counter_account.created
+>     sudo ln -s /usr/share/munin/plugins/stripe_event_counter_ /etc/munin/plugins/stripe_event_counter_account.created
 >     sudo /etc/init.d/munin-node restart
