@@ -45,13 +45,13 @@ if __name__ == "__main__":
 			print "graph_vlabel Number Of Customers"
 			print "graph_category stripe"
 
-			if(None != os.environ.get(STRIPE_API_KEY_PROD)):
+			if(None != os.environ.get("STRIPE_API_KEY_PROD")):
 				# in green
 				print "CUSTOMERS_PROD.label Prod Customers"
 				print "CUSTOMERS_PROD.colour 00cc00"
 				print "CUSTOMERS_PROD.draw AREA"
 
-			if(None != os.environ.get(STRIPE_API_KEY_TEST)):
+			if(None != os.environ.get("STRIPE_API_KEY_TEST")):
 				# in lovely orange
 				print "CUSTOMERS_TEST.label Test Customers"
 				print "CUSTOMERS_TEST.colour FF6600"
