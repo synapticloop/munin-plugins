@@ -28,7 +28,7 @@ import socket
 
 def get_stats():
 	foundEnv = False
-	stripe.api_key = os.environ["STRIPE_API_KEY"]
+	stripe.api_key = os.getenv("STRIPE_API_KEY")
 	if(None != stripe.api_key):
 		# ignoring test and prod
 		try:
@@ -40,7 +40,7 @@ def get_stats():
 	else:
 		# we are going to look 
 		for env in "PROD", "TEST":
-			stripe.api_key = os.environ["STRIPE_API_KEY_" + env]
+			stripe.api_key = os.getenv("STRIPE_API_KEY_" + env)
 			try:
 				jsonPayload = stripe.Customer.all(count=0)
 				print("CUSTOMERS_%s.value %i" % (env, jsonPayload["count"]))
@@ -57,23 +57,19 @@ if __name__ == "__main__":
 			print "graph_title Number of Stripe Customers"
 			print "graph_vlabel Number Of Customers"
 			print "graph_category stripe"
-			if(None != os.environ[STRIPE_API_KEY]):
+			if(None != os.getenv(STRIPE_API_KEY)):
 				# in green
 				print "CUSTOMERS.label Customers"
 				print "CUSTOMERS.colour 00cc00"
 				print "CUSTOMERS.draw AREA"
 			else:
-				if(None != os.environ[STRIPE_API_KEY_PROD]):
-					foundKey = True
-
+				if(None != os.getenv(STRIPE_API_KEY_PROD)):
 					# in green
 					print "CUSTOMERS_PROD.label Prod Customers"
 					print "CUSTOMERS_PROD.colour 00cc00"
 					print "CUSTOMERS_PROD.draw AREA"
 
-				if(None != os.environ[STRIPE_API_KEY_TEST]):
-					foundKey = True
-
+				if(None != os.getenv(STRIPE_API_KEY_TEST)):
 					# in lovely orange
 					print "CUSTOMERS_TEST.label Test Customers"
 					print "CUSTOMERS_TEST.colour FF6600"
