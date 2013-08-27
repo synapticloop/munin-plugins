@@ -33,6 +33,7 @@ copy the file conf/stripe to /etc/munin/plugin-conf.d/stripe i.e.:
 
 >     cp conf/stripe /etc/munin/plugin-conf.d/
 
+And edit the values contained within the file
 
 ## stripe_customer_count
 
