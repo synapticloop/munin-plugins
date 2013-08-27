@@ -30,7 +30,8 @@
 #
 # CONFIGURATION
 #
-# you will need to have a env.STRIPE_API_KEY
+# you will need to have the following configuration items
+#  env.STRIPE_API_KEY_PROD
 #
 
 import sys, os, string, urllib2, stripe
@@ -40,7 +41,7 @@ import time
 import socket
 
 THIS_SCRIPT_NAME ="stripe_event_counter_"
-stripe.api_key = os.environ["STRIPE_API_KEY"]
+stripe.api_key = os.environ.get("STRIPE_API_KEY_PROD")
 
 def get_stats(event_type):
 	# get the time for todays 00:00

@@ -14,16 +14,18 @@
 #
 # Any
 #
+#
 # CONFIGURATION
 #
-# you will need to have a env.STRIPE_API_KEY
+# you will need to have the following configuration items
+#  env.STRIPE_API_KEY_PROD
 #
 
 import sys, os, string, urllib2, stripe
 from urllib2 import HTTPError
 import socket
 
-stripe.api_key = os.environ["STRIPE_API_KEY"]
+stripe.api_key = os.environ.get("STRIPE_API_KEY_PROD")
 
 def get_stats():
 	try:

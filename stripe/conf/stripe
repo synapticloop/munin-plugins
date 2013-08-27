@@ -1,8 +1,4 @@
 [stripe_*]
-# put your stripe api key below
-
-env.STRIPE_API_KEY YourAPIKeyGoesHere
-
-# __OR__ put both your test __AND__ production keys here
+# Put your stripe keys below
 env.STRIPE_API_KEY_PROD YourProdAPIKeyGoesHere
 env.STRIPE_API_KEY_TEST YourTestAPIKeyGoesHere
