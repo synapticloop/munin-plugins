@@ -14,39 +14,73 @@
 #
 # Any
 #
-# you will need to have a env.STRIPE_API_KEY
+# you will need to have the following configuration items
+#  env.STRIPE_API_KEY_TEST
+#  env.STRIPE_API_KEY_PROD
 #
-# None
+# or just
+#  env.STRIPE_API_KEY
 #
 
 import sys, os, string, urllib2, stripe
 from urllib2 import HTTPError
 import socket
 
-stripe.api_key = os.environ["STRIPE_API_KEY"]
-
 def get_stats():
-	try:
-		jsonPayload = stripe.Customer.all(count=0)
-		print("CUSTOMERS.value %i" % (jsonPayload["count"]))
-	except HTTPError, e:
-		sys.exit()
+	foundEnv = False
+	stripe.api_key = os.environ["STRIPE_API_KEY"]
+	if(None != stripe.api_key):
+		# ignoring test and prod
+		try:
+			jsonPayload = stripe.Customer.all(count=0)
+			print("CUSTOMERS.value %i" % (jsonPayload["count"]))
+		except HTTPError, e:
+			sys.exit()
+
+	else:
+		# we are going to look 
+		for env in "PROD", "TEST":
+			stripe.api_key = os.environ["STRIPE_API_KEY_" + env]
+			try:
+				jsonPayload = stripe.Customer.all(count=0)
+				print("CUSTOMERS_%s.value %i" % (env, jsonPayload["count"]))
+			except HTTPError, e:
+				sys.exit()
 
 
 if __name__ == "__main__":
 	# are we doing config/autoconfig?
 	if(len(sys.argv) > 1):
 		if (sys.argv[1]=="config"):
+			foundKey = False
+
 			print "graph_title Number of Stripe Customers"
 			print "graph_vlabel Number Of Customers"
 			print "graph_category stripe"
+			if(None != os.environ[STRIPE_API_KEY]):
+				# in green
+				print "CUSTOMERS.label Customers"
+				print "CUSTOMERS.colour 00cc00"
+				print "CUSTOMERS.draw AREA"
+			else:
+				if(None != os.environ[STRIPE_API_KEY_PROD]):
+					foundKey = True
 
-			# in green
-			print "CUSTOMERS.label Customers"
-			print "CUSTOMERS.colour 00cc00"
-			print "CUSTOMERS.draw AREA"
+					# in green
+					print "CUSTOMERS_PROD.label Prod Customers"
+					print "CUSTOMERS_PROD.colour 00cc00"
+					print "CUSTOMERS_PROD.draw AREA"
+
+				if(None != os.environ[STRIPE_API_KEY_TEST]):
+					foundKey = True
+
+					# in lovely orange
+					print "CUSTOMERS_TEST.label Test Customers"
+					print "CUSTOMERS_TEST.colour FF6600"
+					print "CUSTOMERS_TEST.draw LINE3"
+
+			sys.exit()
 
 			print "graph_args --base 1000 "
-			sys.exit()
 
 	get_stats()
