@@ -26,14 +26,7 @@
 # generate the page rank for the site
 #
 
-import struct
-import sys
-import os
-import urllib
-import urllib2
-import httplib
-import re
-import xml.etree.ElementTree
+import struct, sys, os, urllib, urllib2, httplib, re, xml.etree.ElementTree
 
 THIS_SCRIPT_NAME ="google_page_rank_"
 
@@ -204,8 +197,8 @@ if __name__ == "__main__":
 			for url in urls:
 				# in green
 				print "PAGE_RANK_" + url.replace(".", "_") + ".label " + url + ""
-				#print "PAGE_RANK_" + url.replace(".", "_") + ".colour 00cc00"
-				print "PAGE_RANK_" + url.replace(".", "_") + ".draw AREA"
+				# let munin work out the pretty colours
+				print "PAGE_RANK_" + url.replace(".", "_") + ".draw LINE3"
 
 			print "graph_args --base 1000 "
 			sys.exit()
