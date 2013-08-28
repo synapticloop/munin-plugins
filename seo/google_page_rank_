@@ -197,7 +197,7 @@ if __name__ == "__main__":
 	# are we doing config/autoconfig?
 	if(len(sys.argv) > 1):
 		if (sys.argv[1]=="config"):
-			print "graph_title Google PageRank."
+			print "graph_title Google PageRank"
 			print "graph_vlabel PageRank"
 			print "graph_category SEO"
 
