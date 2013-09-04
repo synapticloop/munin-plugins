@@ -48,7 +48,9 @@ def get_json_data(method, json_key):
 
 	jsonContents = json.loads(contents)
 
-	result = jsonContents.get("result")
+	result = None
+	if(not isinstance(jsonContents, list)):
+		result = jsonContents.get("result")
 
 	if(result != None and result == "error"):
 		return(0)
