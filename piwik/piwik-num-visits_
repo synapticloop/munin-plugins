@@ -15,21 +15,13 @@
 #
 # CONFIGURATION
 #
-# This script is used to generate data for several graphs of number of visits
-# per site for the piwik installation.
-# 
-# You must know the site number of your piwik installation and create a
-# symbolic link to the site number that you wish to track
-#
-# For example to track site 1
-#
-#   cd /etc/munin/plugins
-#   ln -s /usr/share/munin/plugins/piwik-num-visits_ piwik-num-visits_1
-#   /etc/init.d/munin-node restart
+# This script is used to generate data for several graphs. To generate data for 
+# one specific hudson instance, you need to create a symbolic link with a name 
+# like hudson_<NAME> to this script.
 #
 # connection parameters - use this in your plugin configuration file.
 #
-# [piwik_*]
+# [hudson_*]
 # env.piwik.url the url to hit the piwik API on
 # env.piwik.token_auth the authorisation token for the piwik installation
 #
@@ -56,16 +48,29 @@ def get_json_data(method, json_key):
 
 	jsonContents = json.loads(contents)
 
+	result = jsonContents.get("result")
+
+	if(result != None and result == "error"):
+		return(0)
+
 	if(method.rfind("period") != -1):
 		return(jsonContents[json_key])
 	else:
 		return(jsonContents[0][json_key])
 
 def get_site_name():
-	return(get_json_data("SitesManager.getSiteFromId", "name"))
+	try:
+		return(get_json_data("SitesManager.getSiteFromId", "name"))
+	except KeyError:
+		# we couldn't find the site name
+		return("Error Retrieving site")
 
 def get_num_visits():
-	return(get_json_data("API.get&period=day&date=today", "nb_visits"))
+	try:
+		return(get_json_data("API.get&period=day&date=today", "nb_visits"))
+	except KeyError:
+		# we couldn't find the site name
+		return(0)
 
 if __name__ == "__main__":
 	# figure out which one we are doing
