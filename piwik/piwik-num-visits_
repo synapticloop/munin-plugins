@@ -21,7 +21,7 @@
 #
 # connection parameters - use this in your plugin configuration file.
 #
-# [hudson_*]
+# [piwik-num-visits_*]
 # env.piwik.url the url to hit the piwik API on
 # env.piwik.token_auth the authorisation token for the piwik installation
 #
