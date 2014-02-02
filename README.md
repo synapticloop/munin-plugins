@@ -5,7 +5,30 @@ Munin plugins for various things which may or may not be handy to you
 
 ## piwik
 
-  1. Graph the number of visitors to a any registered piwik sites
+**Graph the number of visitors to a any registered piwik sites**
+
+  1. copy the file to ```/usr/share/munin/plugins/```
+  1. ```cd /etc/munin/plugins/```
+  1. ```ln -s /usr/share/munin/plugins/piwik-num-visits_ piwik-num-visits_piwiksitenumber```
+  1. ```etc /init.d/munin-node restart``` **__or__**
+  1. ```service munin-node restart```
+
+To determine the piwik site number
+
+  1. Sign in to your piwik installation
+  1. Go to ```Settings``` (top right hand corner of the site)
+  1. Click ```Websites``` from the left hand side navigation
+
+And the site number will be listed in the table.
+
+for example, for site number 7, you should:
+
+  1. ```ln -s /usr/share/munin/plugins/piwik-num-visits_ piwik-num-visits_7```
+
+You will also need to place a configuration file in the ```/etc/munin/plugin-conf.d``` directory which contains your site url and piwik authorisation key in it.
+
+There is an example file in the ```conf``` directory.
+
 
 ## seo
 
@@ -13,7 +36,7 @@ Munin plugins for various things which may or may not be handy to you
 
 ## ssl-expiry
 
-Graph the number of days until an SSL cerificate for a domain expires
+**Graph the number of days until an SSL cerificate for a domain expires**
 
 To activate this munin plugin
 
