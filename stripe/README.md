@@ -29,9 +29,9 @@ Installation
 Munin Configuration
 ===================
 
-copy the file conf/stripe to /etc/munin/plugin-conf.d/stripe i.e.:
+copy the file plugin-conf.d/stripe to /etc/munin/plugin-conf.d/stripe i.e.:
 
->     cp conf/stripe /etc/munin/plugin-conf.d/
+>     cp plugin-conf.d/stripe /etc/munin/plugin-conf.d/
 
 And edit the values contained within the file
 

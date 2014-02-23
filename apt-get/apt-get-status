@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if test -z "$1"
+then
+	#
+	# the following command should output something along the following
+	#
+	# 145 upgraded, 0 newly installed, 0 to remove and 3 not upgraded
+
+	apt-get upgrade -squ | grep "upgraded," | awk '{ print "UPGRADE.value", $1,  "\nINSTALL.value", $3, "\nREMOVE.value", $6, "\nNO_UPGRADE.value", $10 }'
+else
+	if [[ "$1" = "config" ]]
+	then
+		# time for the munin configuration items
+		echo "graph_title APT get Status"
+		echo "graph_vlabel Availability Number of Packages"
+		echo "graph_category system"
+
+		# in green
+		echo "UPGRADE.label Upgrades"
+		echo "UPGRADE.draw LINE"
+
+		echo "INSTALL.label New installs"
+		echo "INSTALL.draw LINE"
+
+		echo "REMOVE.label Removals"
+		echo "REMOVE.draw LINE"
+
+		echo "NO_UPGRADE.label Not upgradeable"
+		echo "NO_UPGRADE.draw LINE"
+
+		echo "graph_args -l 0 "
+	fi
+fi
