@@ -3,6 +3,17 @@ munin-plugins
 
 Munin plugins for various things which may or may not be handy to you
 
+## apt-get
+
+**Graph the number of available apt packages that can be upgraded/installed/removed and not upgraded**
+
+  1. copy the file to ```/usr/share/munin/plugins/```
+  1. ```cd /etc/munin/plugins/```
+  1. ```ln -s /usr/share/munin/plugins/apt-get-status apt-get-status```
+  1. copy the configuration file ```plugin-conf.d/apt-get-status``` to ```/usr/share/munin/plugin-conf.d/```
+  1. ```etc /init.d/munin-node restart``` **__or__**
+  1. ```service munin-node restart```
+
 ## piwik
 
 **Graph the number of visitors to a any registered piwik sites**
