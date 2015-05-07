@@ -1,4 +1,4 @@
-Wordpress
+Piwik
 =========
 
 Handy munin graph creators for various [piwik](http://piwik.org) 
