@@ -1,0 +1,48 @@
+#!/usr/bin/python
+
+import string, os, sys
+
+LOG_DIRECTORY = os.environ.get("NEWZNAB_LOG_FILE")
+
+group_left_count = {}
+
+def get_remaining_parts():
+	with open(LOG_DIRECTORY) as input_file:
+		for line in input_file:
+			if line.rfind("new parts.") != -1:
+				line = string.strip(line)
+				splits = line.split(" ")
+				group_left_count[splits[1]] = splits[3].replace(",", "")
+
+def get_stats():
+	keys = group_left_count.keys()
+	keys.sort()
+
+	for key in keys:
+		print(replaceDot(key) + ".value " + group_left_count[key])
+
+def replaceDot(key):
+	return(key.replace(".", "_"))
+
+if __name__ == "__main__":
+	# are we doing config/autoconfig?
+	get_remaining_parts()
+
+	if(len(sys.argv) > 1):
+		if (sys.argv[1]=="config"):
+			print "graph_title Newznab Parts Left"
+			print "graph_vlabel Number of parts"
+			print "graph_category newznab"
+
+			keys = group_left_count.keys()
+			keys.sort()
+
+			for key in keys:
+
+				print replaceDot(key) + ".label " + key
+				print replaceDot(key) + ".draw LINE3"
+
+			print "graph_args --base 1000 "
+			sys.exit()
+
+	get_stats()

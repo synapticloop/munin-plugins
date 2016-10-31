@@ -1,0 +1,5 @@
+[newznab_parts_left]
+user root
+
+# Log file location goes here
+env.NEWZNAB_LOG_FILE /var/log/newznab/newznab.log
