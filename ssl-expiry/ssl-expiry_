@@ -20,7 +20,7 @@ from ssl import SSLError, cert_time_to_seconds
 THIS_SCRIPT_NAME = "ssl-expiry_"
 
 def get_num_days(site_name):
-	p1 = subprocess.Popen(["openssl", "s_client", "-connect", site_name + ":443"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	p1 = subprocess.Popen(["openssl", "s_client", "-servername", site_name, "-connect", site_name + ":443"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	p2 = subprocess.Popen(["openssl", "x509", "-noout", "-enddate"], stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	p1.stdout.close()
 	output = p2.communicate();
