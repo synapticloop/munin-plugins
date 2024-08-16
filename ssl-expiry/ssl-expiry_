@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # encoding utf8
 # head1 NAME
@@ -11,7 +11,7 @@
 # Any system that can connect to the internet
 #
 # CONFIGURATION
-# 
+#
 #
 
 import sys, os, string, subprocess, time
@@ -20,42 +20,42 @@ from ssl import SSLError, cert_time_to_seconds
 THIS_SCRIPT_NAME = "ssl-expiry_"
 
 def get_num_days(site_name):
-	p1 = subprocess.Popen(["openssl", "s_client", "-connect", site_name + ":443"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-	p2 = subprocess.Popen(["openssl", "x509", "-noout", "-enddate"], stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-	p1.stdout.close()
-	output = p2.communicate();
-	not_after = output[0]
-	index_of = not_after.find("notAfter") 
-	if(index_of < 0):
-		# have an error here
-		return(0)
-	else:
-		# notAfter=Jan  6 11:02:56 2017 GMT
-		time_string = not_after[index_of + len("notAfter") + 1:-1]
-		num_seconds = cert_time_to_seconds(time_string)
-		return(int(round( (num_seconds - time.time())/(60*60*24))))
+        p1 = subprocess.Popen(["openssl", "s_client", "-connect", site_name + ":443"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p2 = subprocess.Popen(["openssl", "x509", "-noout", "-enddate"], stdin=p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p1.stdout.close()
+        output = p2.communicate();
+        not_after = output[0].decode("utf-8")
+        index_of = not_after.find("notAfter")
+        if(index_of < 0):
+                # have an error here
+                return(0)
+        else:
+                # notAfter=Jan  6 11:02:56 2017 GMT
+                time_string = not_after[index_of + len("notAfter") + 1:-1]
+                num_seconds = cert_time_to_seconds(time_string)
+                return(int(round( (num_seconds - time.time())/(60*60*24))))
 
 if __name__ == "__main__":
-	# figure out which one we are doing
-	full_caller_name = sys.argv[0]
-	index_of_script = full_caller_name.find(THIS_SCRIPT_NAME)
-	site_name = sys.argv[0][len(THIS_SCRIPT_NAME) + index_of_script:]
-	# are we doing config/autoconfig?
-	if(len(sys.argv) > 1):
-		if (sys.argv[1]=="config"):
-			print "graph_title Days until SSL certificate for " + site_name + " expires."
-			print "graph_vlabel Number Of Days"
-			print "graph_category SSL"
+        # figure out which one we are doing
+        full_caller_name = sys.argv[0]
+        index_of_script = full_caller_name.find(THIS_SCRIPT_NAME)
+        site_name = sys.argv[0][len(THIS_SCRIPT_NAME) + index_of_script:]
+        # are we doing config/autoconfig?
+        if(len(sys.argv) > 1):
+                if (sys.argv[1]=="config"):
+                        print("graph_title Days until SSL certificate for " + site_name + " expires.")
+                        print("graph_vlabel Number Of Days")
+                        print("graph_category SSL")
 
-			# in green
-			print "NUM_DAYS.label Number of Days"
-			print "NUM_DAYS.colour 00cc00"
-			print "NUM_DAYS.draw AREA"
+                        # in green
+                        print("NUM_DAYS.label Number of Days")
+                        print("NUM_DAYS.colour 00cc00")
+                        print("NUM_DAYS.draw AREA")
 
-			print "graph_args --base 1000 -l 0 "
-			sys.exit()
+                        print("graph_args --base 1000 -l 0 ")
+                        sys.exit()
 
-	# now that we know the caller, get the environment
-	#stat_url = os.environ.get("url." + caller)
+        # now that we know the caller, get the environment
+        #stat_url = os.environ.get("url." + caller)
 
-	print("NUM_DAYS.value %i" % (get_num_days(site_name)))
+        print("NUM_DAYS.value %i" % (get_num_days(site_name)))
